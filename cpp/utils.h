@@ -10,6 +10,7 @@
 
 // Include torch extension - compilation flags will handle compatibility
 #include <torch/extension.h>
+#include <ATen/cuda/CUDAContext.h>  // Required for getCurrentCUDAStream()
 #include <cuda_runtime.h>
 #include <vector>
 #include <string>
