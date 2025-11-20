@@ -8,13 +8,20 @@
  * - Fused (FlashAttention-style)
  */
 
-#include <torch/extension.h>
+// Use minimal headers to avoid nn module compilation errors in Colab
+#include <ATen/ATen.h>
+#include <ATen/cuda/CUDAContext.h>
+#include <torch/python.h>
 #include <cuda_runtime.h>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <cmath>
 #include "utils.h"
+
+// Namespace aliases for compatibility
+namespace py = pybind11;
+using torch::Tensor;
 
 // Forward declarations of CUDA kernel launchers
 extern "C" {

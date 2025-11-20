@@ -8,8 +8,11 @@
 #ifndef CPP_UTILS_H
 #define CPP_UTILS_H
 
-#include <torch/extension.h>
+// Use minimal ATen headers instead of full torch/extension.h
+// to avoid pulling in nn modules that cause compilation errors
+#include <ATen/ATen.h>
 #include <ATen/cuda/CUDAContext.h>
+#include <c10/cuda/CUDAStream.h>
 #include <cuda_runtime.h>
 #include <vector>
 #include <string>
