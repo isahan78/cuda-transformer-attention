@@ -10,8 +10,11 @@
 
 #include <torch/extension.h>
 #include <cuda_runtime.h>
-#include "utils.h"
+#include <iostream>
+#include <vector>
+#include <string>
 #include <cmath>
+#include "utils.h"
 
 // Forward declarations of CUDA kernel launchers
 extern "C" {
