@@ -9,10 +9,12 @@
 #define CPP_UTILS_H
 
 #include <torch/extension.h>
+#include <ATen/cuda/CUDAContext.h>
 #include <cuda_runtime.h>
 #include <vector>
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 // Macro for checking tensor properties
 #define CHECK_CUDA(x) TORCH_CHECK(x.device().is_cuda(), #x " must be a CUDA tensor")
