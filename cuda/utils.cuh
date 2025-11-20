@@ -12,6 +12,7 @@
 #include <device_launch_parameters.h>
 #include <cmath>
 #include <cfloat>
+#include <cstdio>
 
 // Error checking macro
 #define CUDA_CHECK(call) \
