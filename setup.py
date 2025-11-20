@@ -21,10 +21,10 @@ cpp_sources = [
     "cpp/attention_binding.cpp",
 ]
 
-# Compiler flags - use C++14 for compatibility
+# Compiler flags - use C++17 with permissive mode to handle operator overloads
 extra_compile_args = {
-    'cxx': ['-O2', '-std=c++14'],
-    'nvcc': ['-O2', '-std=c++14', '--expt-relaxed-constexpr'],
+    'cxx': ['-O2', '-std=c++17', '-fpermissive'],
+    'nvcc': ['-O2', '-std=c++17', '--expt-relaxed-constexpr', '-Xcompiler', '-fpermissive'],
 }
 
 # Build extension

@@ -8,10 +8,8 @@
  * - Fused (FlashAttention-style)
  */
 
-// Use minimal headers to avoid nn module compilation errors in Colab
-#include <ATen/ATen.h>
-#include <ATen/cuda/CUDAContext.h>
-#include <torch/python.h>
+// Use torch/extension.h for full PyTorch C++ API
+#include <torch/extension.h>
 #include <cuda_runtime.h>
 #include <iostream>
 #include <vector>
@@ -21,7 +19,7 @@
 
 // Namespace aliases for compatibility
 namespace py = pybind11;
-using at::Tensor;
+using torch::Tensor;
 
 // Forward declarations of CUDA kernel launchers
 extern "C" {
@@ -277,7 +275,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("K"),
           py::arg("V"),
           py::arg("mode") = "tiled",
-          py::arg("mask") = at::Tensor(),
+          py::arg("mask") = torch::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
@@ -287,7 +285,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("Q"),
           py::arg("K"),
           py::arg("V"),
-          py::arg("mask") = at::Tensor(),
+          py::arg("mask") = torch::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
@@ -297,7 +295,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("Q"),
           py::arg("K"),
           py::arg("V"),
-          py::arg("mask") = at::Tensor(),
+          py::arg("mask") = torch::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
@@ -307,7 +305,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("Q"),
           py::arg("K"),
           py::arg("V"),
-          py::arg("mask") = at::Tensor(),
+          py::arg("mask") = torch::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );

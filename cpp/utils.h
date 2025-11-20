@@ -8,11 +8,8 @@
 #ifndef CPP_UTILS_H
 #define CPP_UTILS_H
 
-// Use minimal ATen headers instead of full torch/extension.h
-// to avoid pulling in nn modules that cause compilation errors
-#include <ATen/ATen.h>
-#include <ATen/cuda/CUDAContext.h>
-#include <c10/cuda/CUDAStream.h>
+// Include torch extension - compilation flags will handle compatibility
+#include <torch/extension.h>
 #include <cuda_runtime.h>
 #include <vector>
 #include <string>
@@ -23,7 +20,7 @@
 #define CHECK_CUDA(x) TORCH_CHECK(x.device().is_cuda(), #x " must be a CUDA tensor")
 #define CHECK_CONTIGUOUS(x) TORCH_CHECK(x.is_contiguous(), #x " must be contiguous")
 #define CHECK_INPUT(x) CHECK_CUDA(x); CHECK_CONTIGUOUS(x)
-#define CHECK_FLOAT(x) TORCH_CHECK(x.dtype() == at::kFloat, #x " must be float32")
+#define CHECK_FLOAT(x) TORCH_CHECK(x.dtype() == torch::kFloat32, #x " must be float32")
 
 /**
  * Validate attention input tensors
@@ -37,9 +34,9 @@
  * - Head dimension matches
  */
 inline void validate_attention_inputs(
-    const at::Tensor& Q,
-    const at::Tensor& K,
-    const at::Tensor& V
+    const torch::Tensor& Q,
+    const torch::Tensor& K,
+    const torch::Tensor& V
 ) {
     // Check device and memory layout
     CHECK_INPUT(Q);
@@ -85,7 +82,7 @@ inline void validate_attention_inputs(
  * - Shape [B, H, S_q, S_k] or broadcastable
  */
 inline void validate_mask(
-    const at::Tensor& mask,
+    const torch::Tensor& mask,
     int B, int H, int S_q, int S_k
 ) {
     if (!mask.defined()) {
@@ -109,24 +106,24 @@ inline void validate_mask(
 /**
  * Get tensor data pointer as float*
  */
-inline float* get_data_ptr(at::Tensor& tensor) {
+inline float* get_data_ptr(torch::Tensor& tensor) {
     return tensor.data_ptr<float>();
 }
 
-inline const float* get_data_ptr(const at::Tensor& tensor) {
+inline const float* get_data_ptr(const torch::Tensor& tensor) {
     return tensor.data_ptr<float>();
 }
 
 /**
  * Create output tensor with same options as input
  */
-inline at::Tensor create_output_tensor(
-    const at::Tensor& reference,
+inline torch::Tensor create_output_tensor(
+    const torch::Tensor& reference,
     std::vector<int64_t> shape
 ) {
-    return at::zeros(
+    return torch::zeros(
         shape,
-        at::TensorOptions()
+        torch::TensorOptions()
             .dtype(reference.dtype())
             .device(reference.device())
     );
@@ -142,7 +139,7 @@ inline cudaStream_t get_current_stream() {
 /**
  * Format tensor shape for error messages
  */
-inline std::string shape_string(const at::Tensor& tensor) {
+inline std::string shape_string(const torch::Tensor& tensor) {
     std::string result = "[";
     for (int i = 0; i < tensor.dim(); i++) {
         if (i > 0) result += ", ";
@@ -155,7 +152,7 @@ inline std::string shape_string(const at::Tensor& tensor) {
 /**
  * Print tensor info for debugging
  */
-inline void print_tensor_info(const std::string& name, const at::Tensor& tensor) {
+inline void print_tensor_info(const std::string& name, const torch::Tensor& tensor) {
     std::cout << name << ": "
               << "shape=" << shape_string(tensor)
               << " dtype=" << tensor.dtype()
