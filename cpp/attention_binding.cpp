@@ -21,7 +21,7 @@
 
 // Namespace aliases for compatibility
 namespace py = pybind11;
-using torch::Tensor;
+using at::Tensor;
 
 // Forward declarations of CUDA kernel launchers
 extern "C" {
@@ -74,11 +74,11 @@ extern "C" {
 /**
  * Three-stage attention: QK -> Softmax -> AV (Naive version)
  */
-torch::Tensor attention_forward_naive(
-    torch::Tensor Q,
-    torch::Tensor K,
-    torch::Tensor V,
-    torch::Tensor mask,
+Tensor attention_forward_naive(
+    Tensor Q,
+    Tensor K,
+    Tensor V,
+    Tensor mask,
     bool is_causal,
     float scale
 ) {
@@ -145,11 +145,11 @@ torch::Tensor attention_forward_naive(
 /**
  * Three-stage attention: QK -> Softmax -> AV (Tiled/Optimized version)
  */
-torch::Tensor attention_forward_tiled(
-    torch::Tensor Q,
-    torch::Tensor K,
-    torch::Tensor V,
-    torch::Tensor mask,
+Tensor attention_forward_tiled(
+    Tensor Q,
+    Tensor K,
+    Tensor V,
+    Tensor mask,
     bool is_causal,
     float scale
 ) {
@@ -199,11 +199,11 @@ torch::Tensor attention_forward_tiled(
 /**
  * Fused FlashAttention-style kernel
  */
-torch::Tensor attention_forward_fused(
-    torch::Tensor Q,
-    torch::Tensor K,
-    torch::Tensor V,
-    torch::Tensor mask,
+Tensor attention_forward_fused(
+    Tensor Q,
+    Tensor K,
+    Tensor V,
+    Tensor mask,
     bool is_causal,
     float scale
 ) {
@@ -246,12 +246,12 @@ torch::Tensor attention_forward_fused(
 /**
  * Main entry point - dispatches to appropriate kernel based on mode
  */
-torch::Tensor cuda_attention_forward(
-    torch::Tensor Q,
-    torch::Tensor K,
-    torch::Tensor V,
+Tensor cuda_attention_forward(
+    Tensor Q,
+    Tensor K,
+    Tensor V,
     std::string mode,
-    torch::Tensor mask,
+    Tensor mask,
     bool is_causal,
     float scale
 ) {
@@ -277,7 +277,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("K"),
           py::arg("V"),
           py::arg("mode") = "tiled",
-          py::arg("mask") = torch::Tensor(),
+          py::arg("mask") = at::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
@@ -287,7 +287,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("Q"),
           py::arg("K"),
           py::arg("V"),
-          py::arg("mask") = torch::Tensor(),
+          py::arg("mask") = at::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
@@ -297,7 +297,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("Q"),
           py::arg("K"),
           py::arg("V"),
-          py::arg("mask") = torch::Tensor(),
+          py::arg("mask") = at::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
@@ -307,7 +307,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
           py::arg("Q"),
           py::arg("K"),
           py::arg("V"),
-          py::arg("mask") = torch::Tensor(),
+          py::arg("mask") = at::Tensor(),
           py::arg("is_causal") = false,
           py::arg("scale") = 0.0f
     );
